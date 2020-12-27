@@ -32,12 +32,12 @@
 *.app
 
 # Others
+*cmake*
 *!Input.txt
 *!Output.txt
 *.xml
 *.iml
 *.bin
-*cmake*
 *.c
 *.log
 Makefile*
