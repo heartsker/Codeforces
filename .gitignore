@@ -44,8 +44,10 @@ Makefile*
 *.internal
 *.DS_Store
 CMake*.cpp
+CMake*.txt
 clion*.txt
 Target*.txt
 *.make
 link.txt
 *.cbp
+*_?
