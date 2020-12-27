@@ -43,3 +43,9 @@ Makefile*
 *cache*
 *.internal
 *.DS_Store
+CMake*.cpp
+clion*.txt
+Target*.txt
+*.make
+link.txt
+*.cbp
