@@ -42,4 +42,4 @@ Makefile*
 *.marks
 *cache*
 *.internal
-.DS_Store
+*.DS_Store
