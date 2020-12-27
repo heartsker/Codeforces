@@ -50,4 +50,4 @@ Target*.txt
 *.make
 link.txt
 *.cbp
-cmake*/*_
+cmake-*
