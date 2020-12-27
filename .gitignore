@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+# Others
+*.xml
+*.iml
+*cmake*
+*.bin
+*.c
+*.log
+Makefile*
+*.marks
+*cache*
+*.internal
