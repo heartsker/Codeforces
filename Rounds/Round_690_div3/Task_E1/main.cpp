@@ -116,7 +116,7 @@ typedef deque<ll> deqi;
 
 const ld ZERO = 1e-15;
 const ld EPS = 1e-10;
-const ll N = 100500;
+const ll N = 300500;
 const ll MOD = 1000000007;
 const ll INF9 = 1e9;
 const ll INF = 2 * 1e18;
@@ -128,38 +128,42 @@ const ld SQ2 = sqrt(2.0);
 
 // ------------------    CODE    ------------------ //
 
-void solve(vi& v) {
+void solve() {
 
-    ll n = v.size();
+    in(n);
+    mii m;
+    vi v(n); read(v); dosort(v); forin(v) m[t]++;
 
-    ll sum = 0;
-    forin(v) sum += t;
+    ll cnt = 0;
 
-    ll tmp = 0;
-
-    forn(k, n) {
-        if (sum % (n - k)) continue;
-        ll each = sum / (n - k);
-        ll tmp = 0;
-        bool ok = true;
-        fori(n) {
-            tmp += v[i];
-            if (tmp > each) { ok = false; break;}
-            if (tmp == each) { tmp = 0; }
-        }
-        if (ok) {
-            Out << k << endl;
-            return;
-        }
+    FOR(i, 2, n + 1) {
+        cnt += m[i - 1] * m[i] * m[i + 1];
     }
-    
+    FOR(i, 1, n) {
+        cnt += m[i] * (m[i] - 1) / 2 * m[i + 1];
+    }
+    FOR(i, 2, n + 1) {
+        cnt += m[i - 1] * m[i] * (m[i] - 1) / 2;
+    }
+    FOR(i, 2, n) {
+        cnt += m[i - 1] * m[i + 1] * (m[i + 1] - 1) / 2;
+    }
+    FOR(i, 2, n) {
+        cnt += m[i + 1] * m[i - 1] * (m[i - 1] - 1) / 2;
+    }
+    FOR(i, 1, n + 1) {
+        cnt += m[i] * (m[i] - 1) * (m[i] - 2) / 6;
+    }
+
+    Out << cnt << endl;
+
     return;
 }
 
 int main() {
     fastIO;
 
-    classic
+    tests(q) solve();
 
     return 0;
 }

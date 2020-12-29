@@ -116,7 +116,7 @@ typedef deque<ll> deqi;
 
 const ld ZERO = 1e-15;
 const ld EPS = 1e-10;
-const ll N = 100500;
+const ll N = 300500;
 const ll MOD = 1000000007;
 const ll INF9 = 1e9;
 const ll INF = 2 * 1e18;
@@ -128,38 +128,35 @@ const ld SQ2 = sqrt(2.0);
 
 // ------------------    CODE    ------------------ //
 
-void solve(vi& v) {
+void solve() {
 
-    ll n = v.size();
+    in(n);
 
-    ll sum = 0;
-    forin(v) sum += t;
+    vii v;
+    vi l, r;
 
-    ll tmp = 0;
+    fori(n) { in(a); in(b); v.pb({a, b}); l.pb(a); r.pb(b); }
 
-    forn(k, n) {
-        if (sum % (n - k)) continue;
-        ll each = sum / (n - k);
-        ll tmp = 0;
-        bool ok = true;
-        fori(n) {
-            tmp += v[i];
-            if (tmp > each) { ok = false; break;}
-            if (tmp == each) { tmp = 0; }
-        }
-        if (ok) {
-            Out << k << endl;
-            return;
-        }
+    dosort(l);
+    dosort(r);
+
+    ll ans = INF;
+
+    for (auto [a, b] : v) {
+        ll left = lower_bound(all(r), a) - r.begin();
+        ll right = max(L0, n - (upper_bound(all(l), b) - l.begin()));
+        deimprove(ans, left + right);
     }
-    
+
+    Out << ans << endl;
+
     return;
 }
 
 int main() {
     fastIO;
 
-    classic
+    tests(q) solve();
 
     return 0;
 }

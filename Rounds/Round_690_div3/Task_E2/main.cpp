@@ -116,7 +116,7 @@ typedef deque<ll> deqi;
 
 const ld ZERO = 1e-15;
 const ld EPS = 1e-10;
-const ll N = 100500;
+const ll N = 300500;
 const ll MOD = 1000000007;
 const ll INF9 = 1e9;
 const ll INF = 2 * 1e18;
@@ -128,38 +128,55 @@ const ld SQ2 = sqrt(2.0);
 
 // ------------------    CODE    ------------------ //
 
-void solve(vi& v) {
+vi fact, inv_fact;
 
-    ll n = v.size();
-
-    ll sum = 0;
-    forin(v) sum += t;
-
-    ll tmp = 0;
-
-    forn(k, n) {
-        if (sum % (n - k)) continue;
-        ll each = sum / (n - k);
-        ll tmp = 0;
-        bool ok = true;
-        fori(n) {
-            tmp += v[i];
-            if (tmp > each) { ok = false; break;}
-            if (tmp == each) { tmp = 0; }
-        }
-        if (ok) {
-            Out << k << endl;
-            return;
-        }
+// returns (a ^ p) % m
+ll modulo_power(ll a, ll p, ll m) {
+    ll x = 1;
+    ll y = a;
+    while (p > 0) {
+        if (p & 1) x = (x * y) % m;
+        y = (y * y) % m;
+        p >>= 1;
     }
-    
+    return x;
+}
+
+ll combinations(ll n, ll k) {
+    if (k > n) return 0;
+
+    return (fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD);
+}
+
+void solve() {
+
+    in(n); in(m); in(k);
+
+    vi v(n); read(v); dosort(v);
+
+    ll cnt = 0;
+    fori(n) {
+        ll f = upper_bound(all(v), v[i] + k) - v.begin();
+        cnt = (cnt + combinations(f - i - 1, m - 1)) % MOD;
+    }
+
+    Out << cnt << endl;
+
     return;
 }
 
 int main() {
     fastIO;
 
-    classic
+    fact.assign(N, 1);
+    inv_fact.assign(N, 1);
+
+    FOR(i, 1, N) {
+        fact[i] = (fact[i - 1] * i) % MOD;
+        inv_fact[i] = modulo_power(fact[i], MOD - 2, MOD);
+    }
+
+    tests(q) solve();
 
     return 0;
 }
