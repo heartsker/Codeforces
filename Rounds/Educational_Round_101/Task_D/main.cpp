@@ -143,7 +143,7 @@ void solve() {
         u = d;
         d = ceil(sqrt(u));
     }
-    
+
     Out << v.size() << endl;
 
     forin(v) {
