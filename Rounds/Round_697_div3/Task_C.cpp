@@ -19,12 +19,15 @@ typedef long long ll;
 typedef long double ld;
 typedef string str;
 typedef pair<ll, ll> ii;
+typedef pair<ld, ld> dd;
 typedef pair<ll, ii> iii;
 typedef vector<ll> vi;
 typedef vector<bool> vb;
 typedef vector<str> vs;
 typedef vector<ii> vii;
+typedef vector<dd> vdd;
 typedef vector<vi> vvi;
+typedef vector<vb> vvb;
 typedef set<ll> si;
 typedef set<string> ss;
 typedef map<ll, ll> mii;
@@ -39,17 +42,26 @@ typedef map<str, ll> msi;
 #define inc(a, b) a = max(a, b)
 #define dec(a, b) a = min(a, b)
 #define is_2_power() (x && (!(x & (x - 1)))
+#define pow2(x) ((x) * (x))
 #define fastIO() ios::sync_with_stdio(NULL); In.tie(NULL); Out.tie(NULL)
 #define read(x) for (auto &t : (x)) In >> t
 #define write(x) for (auto &t : (x)) Out << t << ' '
 #define dbg(x) cout << (#x) << " --> " << (x) << endl]
 #define in(x) forin(x) In >> t;
 #define out(x) forin(x) Out << t << ' '
+#define precision(x) Out << fixed << setprecision(x)
 #define all(x) (x).begin(), (x).end()
 #define dosort(x) sort(all(x))
 #define doreverse(x) reverse(all(x))
-#define tests ll q; In >> q; while (q--)
+#define tests { ll q; In >> q; while (q--) { solve(); } }
 #define classic { ll n; In >> n; vi v(n); in(v); solvev(n, v); }
+//  ----------------    CONSTS      ----------------    //
+const ld ZERO = 1e-15;
+const ld EPS = 1e-10;
+const ll N = 505;
+const ll MOD = 1000000007;
+const ll INF9 = 2 * 1e9;
+const ll INF = 2 * 1e18;
 //  ----------------    FUNCTIONS   ----------------    //
 
 // returns whether the number is prime
@@ -96,7 +108,27 @@ ll modulo_power(ll a, ll p, ll m) {
         y = (y * y) % m;
         p >>= 1;
     }
-    return x;
+    return x % m;
+}
+
+// returns (a * b) % m
+ll modulo_mult(ll a, ll b, ll m) {
+    if (!a || !b) return 0;
+    if (a & 1) return (b + modulo_mult(a-1, b, m)) % m;
+    return (modulo_mult(a / 2, b, m) * 2) % m;
+}
+
+// returns quantity of co-prime with n numbers from 1 to n
+ll euler_func(ll n) {
+    ll result = n;
+    For(i, 2, i * i <= n, ++i) {
+        if (n % i == 0) {
+            while (n % i == 0) n /= i;
+            result -= result / i;
+        }
+    }
+    if (n > 1) result -= result / n;
+    return result;
 }
 
 // returns factorisation of number
@@ -137,11 +169,7 @@ vi prime_divisors(ll number) {
 // returns list of all divisors of number
 vi all_divisors(ll number) {
     vi divisors;
-    if (number % 2 == 0) {
-        divisors.push_back(2);
-        if (4 != number) { divisors.push_back(number / 2); }
-    }
-    for (ll p = 3; p * p <= number; p += 2) {
+    for (ll p = 1; p * p <= number; p++) {
         ll t = p;
         if (number % t == 0) {
             divisors.push_back(p);
@@ -157,22 +185,81 @@ ll gcd(ll a, ll b) {
     return (b ? gcd(b, a % b) : a);
 }
 
+// returns {x, y} such a * x + b * y = gcd(a, b)
+ll gcd_coef(ll a, ll b, ll& x, ll& y) {
+    if (a == 0) {
+        x = 0; y = 1;
+        return b;
+    }
+    ll x1, y1;
+    ll d = gcd_coef(b % a, a, x1, y1);
+    x = y1 - (b / a) * x1;
+    y = x1;
+    return d;
+}
+
 // returns number of combination for N choose K
 ll combinations(ll n, ll k) {
     return (k && n - k) ? combinations(n - 1, k) + combinations(n - 1, k - 1) : 1;
 }
 
-// returns factorial of N (N!)
-ll factorial(ll n) {
-    return (n > 1) ? n * factorial(n - 1) : 1;
+// returns whether the number is prime
+bool is_prime_Fermat(ll number, ll iterations) {
+    if (number <= 1 || number == 4) return false;
+    if (number <= 3) return true;
+
+    while (iterations--) {
+        ll a = 1 + rand() % (number - 1);
+        if (gcd(number, a) != 1) return false;
+        if (modulo_power(a, number - 1, number) != 1) return false;
+    }
+    return true;
 }
-//  ----------------    CONSTS      ----------------    //
-const ld ZERO = 1e-15;
-const ld EPS = 1e-10;
-const ll N = 100500;
-const ll MOD = 1000000007;
-const ll INF9 = 1e9;
-const ll INF = 2 * 1e18;
+
+// returns list of all primes less than n
+vi eratosthenes_sieve(ll n) {
+    n++;
+    vb isprime(n, true); // prime -> true
+    vi primes(0); // list of primes
+    vi spf(n); // smallest prime factor of a number
+    isprime[0] = isprime[1] = false;
+    For(i, 2, i < n, ++i) {
+        if (isprime[i]) {
+            primes.push_back(i);
+            spf[i] = i;
+        }
+        For(j, 0, j < primes.size() && i * primes[j] < n && primes[j] <= spf[i], ++j) {
+            isprime[i * primes[j]] = false;
+            spf[i * primes[j]] = primes[j];
+        }
+    }
+    return primes;
+    //return isprime;
+}
+
+//ll fact[N];
+//// returns list of factorials modulo mod
+//void modulo_factorial(ll n, ll mod) {
+//    fact[0] = fact[1] = 1;
+//    For(i, 2, i < n, ++i) fact[i] = (fact[i - 1] * i) % mod;
+//}
+//
+//// returns number of combinations from n by k
+//// (fact and inv_fact are needed)
+//ll modulo_combinations(ll n, ll k, ll mod) {
+//    if (k > n) return 0;
+//    ll t = (fact[k] * fact[n - k]) % mod;
+//    t = modulo_power(t, mod - 2, mod);
+//    return (fact[n] * t) % mod;
+//}
+
+// returns x such a * x = 1 (mod m) or -1 if x does not exist
+ll modulo_inverted_element(ll a, ll m) {
+    ll x, y;
+    ll g = gcd_coef(a, m, x, y);
+    if (g != 1) return -1;
+    else return (x % m + m) % m;;
+}
 //  ----------------    FILES       ----------------    //
 //#define FILEINOUT
 #ifdef FILEINOUT
@@ -191,25 +278,18 @@ void solvev(ll n, vi&v) {
 
 void solve() {
 
-    ll w, h, n;
-    In >> w >> h >> n;
-
-    ll cnt = 1;
-
-    while (w % 2 == 0) { cnt *= 2; w /= 2; }
-    while (h % 2 == 0) { cnt *= 2; h /= 2; }
-
-    Out << (cnt >= n ? "YES" : "NO") << endl;
-
     return;
 }
 
 signed main() {
     fastIO();
+    precision(2);
+    setlocale(LC_ALL, "");
+
 
     //classic
-    //solve();
-    tests solve();
+    solve();
+    //tests solve();
     //tests classic
 
     return 0;

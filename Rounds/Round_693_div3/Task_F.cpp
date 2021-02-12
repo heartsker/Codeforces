@@ -224,7 +224,6 @@ void solve() {
 
     Out << "YES" << endl;
 
-
     return;
 }
 
@@ -235,7 +234,6 @@ signed main() {
     //solve();
     tests solve();
     //tests classic
-
 
     return 0;
 }

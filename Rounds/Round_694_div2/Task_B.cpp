@@ -25,6 +25,7 @@ typedef vector<bool> vb;
 typedef vector<str> vs;
 typedef vector<ii> vii;
 typedef vector<vi> vvi;
+typedef vector<vb> vvb;
 typedef set<ll> si;
 typedef set<string> ss;
 typedef map<ll, ll> mii;
@@ -191,15 +192,30 @@ void solvev(ll n, vi&v) {
 
 void solve() {
 
-    ll w, h, n;
-    In >> w >> h >> n;
+    ll n, x;
+    In >> n >> x;
+    vi v(n);
+    in(v);
 
-    ll cnt = 1;
+    ll sum = 0;
 
-    while (w % 2 == 0) { cnt *= 2; w /= 2; }
-    while (h % 2 == 0) { cnt *= 2; h /= 2; }
+    forin(v) sum += t;
 
-    Out << (cnt >= n ? "YES" : "NO") << endl;
+    ll st = x;
+
+    while (true) {
+        fori(n) {
+            if (v[i] % x) {
+                Out << sum << endl;
+                return;
+            }
+            else {
+                v[i] /= x;
+                sum += v[i] * st;
+            }
+        }
+        st *= x;
+    }
 
     return;
 }

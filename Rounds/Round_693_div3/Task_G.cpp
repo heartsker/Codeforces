@@ -249,6 +249,5 @@ signed main() {
     tests solve();
     //tests classic
 
-
     return 0;
 }

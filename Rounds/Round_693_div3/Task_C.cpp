@@ -187,11 +187,9 @@ ofstream Out("Output.txt");
 void solvev(ll n, vi&v) {
 
     vi dp = v;
-
     For(i, n - 1, i >= 0, i--) {
         if (v[i] + i < n) dp[i] += dp[i + v[i]];
     }
-
     Out << *max_element(all(dp)) << endl;
 
     return;
@@ -209,7 +207,6 @@ signed main() {
     //solve();
     //tests solve();
     tests classic
-
 
     return 0;
 }
